@@ -92,13 +92,13 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         {/* Hero Section */}
-        <div className="text-center mb-16 space-y-4">
+        <div className="text-center mb-16 space-y-4" dir="rtl">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
-            Classify Arabic Words by
-            <span className="text-primary block mt-2">Educational Level</span>
+            تصنيف الكلمات العربية حسب
+            <span className="text-primary block mt-2">المستوى التعليمي</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Using 9 advanced ML, DL, and transformer models to determine the appropriate educational level for any sentence
+            استخدام 9 نماذج متقدمة من تعلم الآلة والتعلم العميق لتحديد المستوى التعليمي المناسب لأي جملة
           </p>
         </div>
 
@@ -108,35 +108,35 @@ const Index = () => {
         </div>
 
         {/* Loading State */}
-        {isLoading && <div className="text-center py-16">
+        {isLoading && <div className="text-center py-16" dir="rtl">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
-            <p className="mt-4 text-muted-foreground">Classifying word...</p>
+            <p className="mt-4 text-muted-foreground">جارٍ التصنيف...</p>
           </div>}
 
         {/* Results Section */}
         {results && !isLoading && <ResultsDisplay word={classifiedWord} predictions={results.predictions} hardVote={results.hardVote} />}
 
         {/* Info Section */}
-        {!results && !isLoading && <div className="max-w-4xl mx-auto mt-16 p-8 bg-card border border-border rounded-lg">
+        {!results && !isLoading && <div className="max-w-4xl mx-auto mt-16 p-8 bg-card border border-border rounded-lg" dir="rtl">
             <h3 className="text-2xl font-bold text-foreground mb-4 text-center">
-              About the Classification System
+              حول نظام التصنيف
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-muted-foreground">
               <div>
-                <h4 className="font-semibold text-foreground mb-2">Educational Levels:</h4>
+                <h4 className="font-semibold text-foreground mb-2">المستويات التعليمية:</h4>
                 <ul className="space-y-2 text-sm">
-                  <li>• Level 1: Pre-school & Grades 1-2</li>
-                  <li>• Level 2: Grades 3-4</li>
-                  <li>• Level 3: Grades 5-6</li>
-                  <li>• Level 4: Grades 7-9</li>
-                  <li>• Level 5: Grades 10-12</li>
-                  <li>• Level 6: University</li>
+                  <li>• المستوى 1: مرحلة ما قبل المدرسة والصف 1-2</li>
+                  <li>• المستوى 2: الصف 3-4</li>
+                  <li>• المستوى 3: الصف 5-6</li>
+                  <li>• المستوى 4: الصف 7-9</li>
+                  <li>• المستوى 5: الصف 10-12</li>
+                  <li>• المستوى 6: الجامعة</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-foreground mb-2">How it works:</h4>
+                <h4 className="font-semibold text-foreground mb-2">كيف يعمل النظام:</h4>
                 <p className="text-sm">
-                  Our system uses 9 different machine learning, deep learning, and transformer models to analyze and classify text based on their complexity and appropriate educational level. The consensus result represents the most agreed-upon classification across all models.
+                  يستخدم نظامنا 9 نماذج مختلفة من تعلم الآلة والتعلم العميق ونماذج المحولات لتحليل وتصنيف النصوص بناءً على تعقيدها والمستوى التعليمي المناسب. تمثل النتيجة النهائية التصنيف الأكثر اتفاقًا بين جميع النماذج.
                 </p>
               </div>
             </div>
@@ -144,9 +144,9 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-20 py-8 bg-card/30">
+      <footer className="border-t border-border mt-20 py-8 bg-card/30" dir="rtl">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>© 2025 Bayyin (بَيِّنْ) - ML Word Classification System</p>
+          <p>© 2025 بَيِّنْ - نظام تصنيف الكلمات بالتعلم الآلي</p>
         </div>
       </footer>
     </div>;

@@ -6,12 +6,12 @@ interface LevelBadgeProps {
 }
 
 const levelLabels = {
-  1: "Pre-school & Grades 1-2",
-  2: "Grades 3-4",
-  3: "Grades 5-6",
-  4: "Grades 7-9",
-  5: "Grades 10-12",
-  6: "University",
+  1: "مرحلة ما قبل المدرسة والصف 1-2",
+  2: "الصف 3-4",
+  3: "الصف 5-6",
+  4: "الصف 7-9",
+  5: "الصف 10-12",
+  6: "الجامعة",
 };
 
 const levelColors = {
@@ -32,7 +32,7 @@ export const LevelBadge = ({ level, className }: LevelBadgeProps) => {
         className
       )}
     >
-      Level {level}: {levelLabels[level]}
+      المستوى {level}: {levelLabels[level]}
     </span>
   );
 };
