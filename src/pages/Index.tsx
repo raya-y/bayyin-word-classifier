@@ -81,7 +81,7 @@ const Index = () => {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-center">
-            <h1 className="text-5xl font-bold text-primary drop-shadow-lg font-serif">
+            <h1 className="font-bold text-primary drop-shadow-lg font-serif text-6xl">
               بَيِّنْ
             </h1>
           </div>
