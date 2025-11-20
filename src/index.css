@@ -19,79 +19,79 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Sunshine Deep Theme - Dark base with warm highlights */
-    --background: 31 88.8889% 89.4118%;
-    --foreground: 0 0% 9%;
+    /* Bayyin Green Theme - Dark green base with natural highlights */
+    --background: 0 0% 98%;
+    --foreground: 167 45% 15%;
 
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 167 45% 15%;
 
-    --popover: 0 0% 89%;
-    --popover-foreground: 0 0% 9%;
+    --popover: 0 0% 98%;
+    --popover-foreground: 167 45% 15%;
 
-    /* Primary: Warm golden sunshine */
-    --primary: 20 90% 48%;
-    --primary-foreground: 33 100% 96%;
+    /* Primary: Dark green */
+    --primary: 167 45% 20%;
+    --primary-foreground: 0 0% 98%;
 
-    /* Secondary: Deep teal accent */
-    --secondary: 0 0% 32%;
+    /* Secondary: Medium green accent */
+    --secondary: 160 50% 30%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 63%;
-    --muted-foreground: 0 0% 9%;
+    --muted: 0 0% 90%;
+    --muted-foreground: 167 30% 35%;
 
-    /* Accent: Bright gold */
-    --accent: 47 100% 96%;
-    --accent-foreground: 37 92% 50%;
+    /* Accent: Bright teal */
+    --accent: 165 58% 51%;
+    --accent-foreground: 167 45% 15%;
 
     --destructive: 0 72% 50%;
     --destructive-foreground: 0 85% 97%;
 
-    --border: 0 0% 83%;
-    --input: 0 0% 83%;
-    --ring: 20 90% 48%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 167 45% 20%;
 
     --radius: 0.75rem;
 
-    /* Educational Level Colors */
-    --level-1: 45 100% 70%;  /* Bright warm yellow - #FFD966 */
-    --level-1-foreground: 220 20% 12%;
+    /* Educational Level Colors - Green Gradient */
+    --level-1: 167 45% 20%;  /* Dark green - #1B4D3E */
+    --level-1-foreground: 0 0% 98%;
 
-    --level-2: 39 100% 50%;  /* Deep orange - #FFA500 */
-    --level-2-foreground: 220 20% 12%;
+    --level-2: 160 50% 25%;  /* #206040 */
+    --level-2-foreground: 0 0% 98%;
 
-    --level-3: 33 100% 50%;  /* Dark orange - #FF8C00 */
-    --level-3-foreground: 45 100% 95%;
+    --level-3: 158 55% 32%;  /* #258060 */
+    --level-3-foreground: 0 0% 98%;
 
-    --level-4: 9 100% 64%;   /* Tomato red - #FF6347 */
-    --level-4-foreground: 45 100% 95%;
+    --level-4: 160 57% 39%;  /* #2B9A80 */
+    --level-4-foreground: 0 0% 98%;
 
-    --level-5: 16 100% 50%;  /* Orange-red - #FF4500 */
-    --level-5-foreground: 45 100% 95%;
+    --level-5: 163 56% 45%;  /* #32B3A0 */
+    --level-5-foreground: 0 0% 98%;
 
-    --level-6: 328 100% 54%; /* Deep pink/magenta - #FF1493 */
-    --level-6-foreground: 45 100% 95%;
+    --level-6: 165 58% 51%;  /* #38CCB8 */
+    --level-6-foreground: 0 0% 98%;
 
     /* Gradient definitions */
-    --gradient-sunshine: linear-gradient(135deg, hsl(45 100% 65%), hsl(39 100% 60%));
-    --gradient-deep: linear-gradient(180deg, hsl(220 20% 12%), hsl(220 18% 16%));
+    --gradient-green: linear-gradient(135deg, hsl(167 45% 20%), hsl(165 58% 51%));
+    --gradient-deep: linear-gradient(180deg, hsl(167 45% 15%), hsl(167 45% 20%));
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --sidebar-background: 220 18% 16%;
-    --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 20 90% 48%;
-    --sidebar-primary-foreground: 33 100% 96%;
-    --sidebar-accent: 0 0% 32%;
+    --sidebar-background: 167 45% 15%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 167 45% 20%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 160 50% 30%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 83%;
-    --sidebar-ring: 20 90% 48%;
-    --chart-1: 27 95% 60%;
-    --chart-2: 43 96% 56%;
-    --chart-3: 47 95% 53%;
-    --chart-4: 24 94% 53%;
-    --chart-5: 0 0% 45%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 167 45% 20%;
+    --chart-1: 167 45% 20%;
+    --chart-2: 160 50% 30%;
+    --chart-3: 158 55% 40%;
+    --chart-4: 163 56% 50%;
+    --chart-5: 165 58% 60%;
     --sidebar: 0 0% 98%;
     --font-sans: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
     --font-serif: 'Libre Caslon Text', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
@@ -109,39 +109,39 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode uses same colors as we're already dark-themed */
-    --background: 0 0% 9%;
+    /* Dark mode with green theme */
+    --background: 167 45% 10%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 14%;
+    --card: 167 40% 15%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 25%;
+    --popover: 167 40% 20%;
     --popover-foreground: 0 0% 98%;
-    --primary: 27 95% 60%;
-    --primary-foreground: 12 81% 14%;
-    --secondary: 0 0% 45%;
+    --primary: 165 58% 51%;
+    --primary-foreground: 167 45% 10%;
+    --secondary: 160 50% 30%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 45%;
-    --muted-foreground: 0 0% 98%;
-    --accent: 20 91% 14%;
-    --accent-foreground: 43 96% 56%;
+    --muted: 167 30% 30%;
+    --muted-foreground: 0 0% 85%;
+    --accent: 163 56% 45%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 85% 97%;
-    --border: 0 0% 32%;
-    --input: 0 0% 32%;
-    --ring: 27 95% 60%;
-    --sidebar-background: 220 18% 16%;
+    --border: 167 30% 25%;
+    --input: 167 30% 25%;
+    --ring: 165 58% 51%;
+    --sidebar-background: 167 45% 12%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 27 95% 60%;
-    --sidebar-primary-foreground: 12 81% 14%;
-    --sidebar-accent: 43 96% 56%;
-    --sidebar-accent-foreground: 20 91% 14%;
-    --sidebar-border: 0 0% 32%;
-    --sidebar-ring: 27 95% 60%;
-    --chart-1: 30 97% 72%;
-    --chart-2: 45 96% 64%;
-    --chart-3: 48 96% 76%;
-    --chart-4: 27 95% 60%;
-    --chart-5: 0 0% 45%;
+    --sidebar-primary: 165 58% 51%;
+    --sidebar-primary-foreground: 167 45% 10%;
+    --sidebar-accent: 163 56% 45%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 167 30% 25%;
+    --sidebar-ring: 165 58% 51%;
+    --chart-1: 167 45% 30%;
+    --chart-2: 160 50% 40%;
+    --chart-3: 158 55% 50%;
+    --chart-4: 163 56% 60%;
+    --chart-5: 165 58% 70%;
     --sidebar: 0 0% 14%;
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
