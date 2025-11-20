@@ -98,7 +98,7 @@ const Index = () => {
             <span className="text-primary block mt-2">Educational Level</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Using 9 advanced ML and DL models to determine the appropriate educational level for any word
+            Using 9 advanced ML, DL, and transformer models to determine the appropriate educational level for any sentence
           </p>
         </div>
 
@@ -136,10 +136,7 @@ const Index = () => {
               <div>
                 <h4 className="font-semibold text-foreground mb-2">How it works:</h4>
                 <p className="text-sm">
-                  Our system uses 9 different machine learning and deep learning models 
-                  to analyze and classify words based on their complexity and appropriate 
-                  educational level. The consensus result represents the most agreed-upon 
-                  classification across all models.
+                  Our system uses 9 different machine learning, deep learning, and transformer models to analyze and classify text based on their complexity and appropriate educational level. The consensus result represents the most agreed-upon classification across all models.
                 </p>
               </div>
             </div>
