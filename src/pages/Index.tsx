@@ -13,39 +13,39 @@ const classifyWord = async (word: string) => {
   const randomLevel = () => Math.floor(Math.random() * 6) + 1 as 1 | 2 | 3 | 4 | 5 | 6;
   return {
     predictions: [{
-      modelName: "XGBoost Classifier",
+      modelName: "BERT Classifier",
       level: randomLevel(),
       confidence: 0.85
     }, {
-      modelName: "Random Forest",
+      modelName: "LSTM Model",
       level: randomLevel(),
       confidence: 0.78
     }, {
-      modelName: "SVM Classifier",
+      modelName: "CNN Classifier",
       level: randomLevel(),
       confidence: 0.92
     }, {
-      modelName: "GNN Classifier",
+      modelName: "XGBoost",
       level: randomLevel(),
       confidence: 0.88
     }, {
-      modelName: "BiLSTM Model",
+      modelName: "Random Forest",
       level: randomLevel(),
       confidence: 0.76
     }, {
-      modelName: "TextCNN Classifier",
+      modelName: "SVM Classifier",
       level: randomLevel(),
       confidence: 0.81
     }, {
-      modelName: "AraBERTv2 Classifier",
+      modelName: "Naive Bayes",
       level: randomLevel(),
       confidence: 0.73
     }, {
-      modelName: "CAMeLBERT-mix Classifier",
+      modelName: "Logistic Regression",
       level: randomLevel(),
       confidence: 0.79
     }, {
-      modelName: "CAMeLBERT-MSA Classifier",
+      modelName: "XGBoost",
       level: randomLevel(),
       confidence: 0.86
     }],
@@ -96,7 +96,7 @@ const Index = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
             تصنيف النصوص العربية حسب
 المستوى التعليمي
-            <span className="text-primary block mt-2">المستوى التعليمي</span>
+            
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             استخدام 9 نماذج متقدمة من تعلم الآلة والتعلم العميق ونماذج المحولات لتحديد المستوى التعليمي المناسب لأي جملة
