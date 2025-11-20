@@ -25,7 +25,7 @@ const classifyWord = async (word: string) => {
       level: randomLevel(),
       confidence: 0.92
     }, {
-      modelName: "Transformer Model",
+      modelName: "XGBoost",
       level: randomLevel(),
       confidence: 0.88
     }, {
