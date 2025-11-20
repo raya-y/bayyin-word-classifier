@@ -96,7 +96,7 @@ const Index = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
             تصنيف النصوص العربية حسب
 المستوى التعليمي
-            <span className="text-primary block mt-2">المستوى التعليمي</span>
+            
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             استخدام 9 نماذج متقدمة من تعلم الآلة والتعلم العميق ونماذج المحولات لتحديد المستوى التعليمي المناسب لأي جملة
