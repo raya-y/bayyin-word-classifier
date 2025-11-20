@@ -13,39 +13,39 @@ const classifyWord = async (word: string) => {
   const randomLevel = () => Math.floor(Math.random() * 6) + 1 as 1 | 2 | 3 | 4 | 5 | 6;
   return {
     predictions: [{
-      modelName: "BERT Classifier",
+      modelName: "XGBoost Classifier",
       level: randomLevel(),
       confidence: 0.85
     }, {
-      modelName: "LSTM Model",
+      modelName: "Random Forest",
       level: randomLevel(),
       confidence: 0.78
     }, {
-      modelName: "CNN Classifier",
+      modelName: "SVM Classifier",
       level: randomLevel(),
       confidence: 0.92
     }, {
-      modelName: "XGBoost",
+      modelName: "GNN Classifier",
       level: randomLevel(),
       confidence: 0.88
     }, {
-      modelName: "Random Forest",
+      modelName: "BiLSTM Model",
       level: randomLevel(),
       confidence: 0.76
     }, {
-      modelName: "SVM Classifier",
+      modelName: "TextCNN Classifier",
       level: randomLevel(),
       confidence: 0.81
     }, {
-      modelName: "Naive Bayes",
+      modelName: "AraBERTv2 Classifier",
       level: randomLevel(),
       confidence: 0.73
     }, {
-      modelName: "Logistic Regression",
+      modelName: "CAMeLBERT-mix Classifier",
       level: randomLevel(),
       confidence: 0.79
     }, {
-      modelName: "XGBoost",
+      modelName: "CAMeLBERT-MSA Classifier",
       level: randomLevel(),
       confidence: 0.86
     }],
