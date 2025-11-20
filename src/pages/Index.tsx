@@ -7,38 +7,61 @@ import { useToast } from "@/hooks/use-toast";
 const classifyWord = async (word: string) => {
   // TODO: Replace with actual API call to Python backend (Flask/FastAPI)
   // Example: const response = await fetch('/api/classify', { method: 'POST', body: JSON.stringify({ word }) });
-  
+
   // Simulated response for demo purposes
   await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  const randomLevel = () => (Math.floor(Math.random() * 6) + 1) as 1 | 2 | 3 | 4 | 5 | 6;
-  
+  const randomLevel = () => Math.floor(Math.random() * 6) + 1 as 1 | 2 | 3 | 4 | 5 | 6;
   return {
-    predictions: [
-      { modelName: "BERT Classifier", level: randomLevel(), confidence: 0.85 },
-      { modelName: "LSTM Model", level: randomLevel(), confidence: 0.78 },
-      { modelName: "CNN Classifier", level: randomLevel(), confidence: 0.92 },
-      { modelName: "Transformer Model", level: randomLevel(), confidence: 0.88 },
-      { modelName: "Random Forest", level: randomLevel(), confidence: 0.76 },
-      { modelName: "SVM Classifier", level: randomLevel(), confidence: 0.81 },
-      { modelName: "Naive Bayes", level: randomLevel(), confidence: 0.73 },
-      { modelName: "Logistic Regression", level: randomLevel(), confidence: 0.79 },
-      { modelName: "XGBoost", level: randomLevel(), confidence: 0.86 },
-    ],
-    hardVote: randomLevel(),
+    predictions: [{
+      modelName: "BERT Classifier",
+      level: randomLevel(),
+      confidence: 0.85
+    }, {
+      modelName: "LSTM Model",
+      level: randomLevel(),
+      confidence: 0.78
+    }, {
+      modelName: "CNN Classifier",
+      level: randomLevel(),
+      confidence: 0.92
+    }, {
+      modelName: "Transformer Model",
+      level: randomLevel(),
+      confidence: 0.88
+    }, {
+      modelName: "Random Forest",
+      level: randomLevel(),
+      confidence: 0.76
+    }, {
+      modelName: "SVM Classifier",
+      level: randomLevel(),
+      confidence: 0.81
+    }, {
+      modelName: "Naive Bayes",
+      level: randomLevel(),
+      confidence: 0.73
+    }, {
+      modelName: "Logistic Regression",
+      level: randomLevel(),
+      confidence: 0.79
+    }, {
+      modelName: "XGBoost",
+      level: randomLevel(),
+      confidence: 0.86
+    }],
+    hardVote: randomLevel()
   };
 };
-
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [classifiedWord, setClassifiedWord] = useState("");
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleClassify = async (word: string) => {
     setIsLoading(true);
     setResults(null);
-    
     try {
       const data = await classifyWord(word);
       setResults(data);
@@ -47,26 +70,22 @@ const Index = () => {
       toast({
         title: "خطأ في التصنيف",
         description: "حدث خطأ أثناء تصنيف الكلمة. يرجى المحاولة مرة أخرى.",
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setIsLoading(false);
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-center">
-            <h1 className="text-5xl font-bold text-primary drop-shadow-lg">
+            <h1 className="text-5xl font-bold text-primary drop-shadow-lg font-serif">
               بَيِّنْ
             </h1>
           </div>
-          <p className="text-center text-muted-foreground mt-2">
-            Machine Learning Word Classification System
-          </p>
+          
         </div>
       </header>
 
@@ -89,25 +108,16 @@ const Index = () => {
         </div>
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="text-center py-16">
+        {isLoading && <div className="text-center py-16">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
             <p className="mt-4 text-muted-foreground">Classifying word...</p>
-          </div>
-        )}
+          </div>}
 
         {/* Results Section */}
-        {results && !isLoading && (
-          <ResultsDisplay
-            word={classifiedWord}
-            predictions={results.predictions}
-            hardVote={results.hardVote}
-          />
-        )}
+        {results && !isLoading && <ResultsDisplay word={classifiedWord} predictions={results.predictions} hardVote={results.hardVote} />}
 
         {/* Info Section */}
-        {!results && !isLoading && (
-          <div className="max-w-4xl mx-auto mt-16 p-8 bg-card border border-border rounded-lg">
+        {!results && !isLoading && <div className="max-w-4xl mx-auto mt-16 p-8 bg-card border border-border rounded-lg">
             <h3 className="text-2xl font-bold text-foreground mb-4 text-center">
               About the Classification System
             </h3>
@@ -133,8 +143,7 @@ const Index = () => {
                 </p>
               </div>
             </div>
-          </div>
-        )}
+          </div>}
       </main>
 
       {/* Footer */}
@@ -143,8 +152,6 @@ const Index = () => {
           <p>© 2025 Bayyin (بَيِّنْ) - ML Word Classification System</p>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
