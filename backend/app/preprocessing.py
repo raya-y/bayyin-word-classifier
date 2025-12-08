@@ -31,7 +31,7 @@ def detect_arabic(text: str) -> Tuple[bool, Optional[str]]:
     try:
         detected_lang = langdetect.detect(text)
         if detected_lang != 'ar':
-            return False, f"Input text is not Arabic. Detected language: {detected_lang}"
+            return False, f"Input text is not Arabic. Detected language: {detected_lang}. Please enter Arabic text for classification."
         return True, None
     except Exception as e:
         # Fallback: check if text contains Arabic characters

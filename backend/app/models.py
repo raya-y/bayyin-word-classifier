@@ -103,7 +103,10 @@ def load_classical_model_from_hf(repo_id: str, file_path: Optional[str] = None) 
             logger.info(f"Loading from specific file: {file_to_load.name}")
             if file_to_load.suffix == '.joblib':
                 obj = joblib.load(file_to_load)
-            elif file_to_load.suffix == '.pkl' or file_to_load.suffix == '.pt':
+            elif file_to_load.suffix == '.pt':
+                # PyTorch model files require torch.load()
+                obj = torch.load(file_to_load, map_location='cpu')
+            elif file_to_load.suffix == '.pkl':
                 with open(file_to_load, 'rb') as f:
                     obj = pickle.load(f)
             else:
@@ -127,13 +130,16 @@ def load_classical_model_from_hf(repo_id: str, file_path: Optional[str] = None) 
                         zip_ref.extractall(temp_dir)
                         temp_path = Path(temp_dir)
                         
-                        # Look for pickle and joblib files
-                        for ext in ['*.pkl', '*.joblib']:
+                        # Look for pickle, joblib, and PyTorch files
+                        for ext in ['*.pkl', '*.joblib', '*.pt']:
                             files = list(temp_path.rglob(ext))
                             for model_file in files:
                                 try:
                                     if ext == '*.joblib':
                                         obj = joblib.load(model_file)
+                                    elif ext == '*.pt':
+                                        # PyTorch model files require torch.load()
+                                        obj = torch.load(model_file, map_location='cpu')
                                     else:
                                         with open(model_file, 'rb') as f:
                                             obj = pickle.load(f)
@@ -150,13 +156,16 @@ def load_classical_model_from_hf(repo_id: str, file_path: Optional[str] = None) 
                                     logger.warning(f"Error loading {model_file.name}: {str(e)}")
                                     continue
             
-            # Check for direct pickle and joblib files
+            # Check for direct pickle, joblib, and PyTorch files
             for ext in ['*.pkl', '*.joblib', '*.pt']:
                 files = list(cache_path.rglob(ext))
                 for model_file in files:
                     try:
                         if ext == '*.joblib':
                             obj = joblib.load(model_file)
+                        elif ext == '*.pt':
+                            # PyTorch model files require torch.load()
+                            obj = torch.load(model_file, map_location='cpu')
                         else:
                             with open(model_file, 'rb') as f:
                                 obj = pickle.load(f)
@@ -377,11 +386,16 @@ def predict_with_transformer_model(model: Any, tokenizer: Any,
             confidence = float(probabilities[0][predicted_class].item())
             
             # Map to grade level (1-6)
-            # Some models might output 0-5, so we add 1
-            if predicted_class < 6:
-                prediction = int(predicted_class) + 1
-            else:
-                prediction = min(int(predicted_class), 6)
+            # Models typically output 0-5 (0-indexed) or 1-6 (1-indexed)
+            # Apply consistent transformation: always add 1 (assuming 0-indexed), then clamp to 1-6
+            predicted_class_int = int(predicted_class)
+            
+            # Apply consistent offset: add 1 to convert from 0-indexed to 1-indexed
+            # This handles both cases: 0-5 maps to 1-6, and 6+ gets clamped appropriately
+            prediction = predicted_class_int + 1
+            
+            # Clamp to valid grade range (1-6)
+            prediction = max(1, min(prediction, 6))
             
             return prediction, confidence
             

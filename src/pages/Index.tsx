@@ -3,54 +3,43 @@ import { ClassificationInput } from "@/components/ClassificationInput";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { useToast } from "@/hooks/use-toast";
 
-// Placeholder function for backend integration
-const classifyWord = async (word: string) => {
-  // TODO: Replace with actual API call to Python backend (Flask/FastAPI)
-  // Example: const response = await fetch('/api/classify', { method: 'POST', body: JSON.stringify({ word }) });
+// Backend API URL - update this to match your backend server
+// For development: http://localhost:8000
+// For production: update to your deployed backend URL
+const API_URL = 'http://localhost:8000';
 
-  // Simulated response for demo purposes
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  const randomLevel = () => Math.floor(Math.random() * 6) + 1 as 1 | 2 | 3 | 4 | 5 | 6;
-  return {
-    predictions: [{
-      modelName: "XGBoost Classifier",
-      level: randomLevel(),
-      confidence: 0.85
-    }, {
-      modelName: "Random Forest",
-      level: randomLevel(),
-      confidence: 0.78
-    }, {
-      modelName: "SVM Classifier",
-      level: randomLevel(),
-      confidence: 0.92
-    }, {
-      modelName: "GNN Classifier",
-      level: randomLevel(),
-      confidence: 0.88
-    }, {
-      modelName: "BiLSTM Model",
-      level: randomLevel(),
-      confidence: 0.76
-    }, {
-      modelName: "TextCNN Classifier",
-      level: randomLevel(),
-      confidence: 0.81
-    }, {
-      modelName: "AraBERTv2 Classifier",
-      level: randomLevel(),
-      confidence: 0.73
-    }, {
-      modelName: "CAMeLBERT-mix Classifier",
-      level: randomLevel(),
-      confidence: 0.79
-    }, {
-      modelName: "CAMeLBERT-MSA Classifier",
-      level: randomLevel(),
-      confidence: 0.86
-    }],
-    hardVote: randomLevel()
-  };
+const classifyWord = async (word: string) => {
+  try {
+    const response = await fetch(`${API_URL}/classify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: word }),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ detail: 'Classification failed' }));
+      throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // Transform backend response to frontend format
+    return {
+      predictions: data.prediction_results.map((result: any) => ({
+        modelName: result.model,
+        level: parseInt(result.prediction.split(' ')[1]) as 1 | 2 | 3 | 4 | 5 | 6,
+        confidence: result.confidence,
+      })),
+      hardVote: data.ensemble_decision 
+        ? parseInt(data.ensemble_decision.split(' ')[1]) as 1 | 2 | 3 | 4 | 5 | 6
+        : 1,
+    };
+  } catch (error) {
+    // Re-throw to be handled by the component
+    throw error;
+  }
 };
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -66,10 +55,25 @@ const Index = () => {
       const data = await classifyWord(word);
       setResults(data);
       setClassifiedWord(word);
-    } catch (error) {
+    } catch (error: any) {
+      // Extract error message
+      let errorMessage = error?.message || "حدث خطأ أثناء تصنيف الكلمة. يرجى المحاولة مرة أخرى.";
+      
+      // Check if it's a network error (backend not running)
+      if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
+        errorMessage = "لا يمكن الاتصال بالخادم. يرجى التأكد من تشغيل الخادم على المنفذ 8000.";
+      }
+      
+      // Check if it's a language detection error (non-Arabic text)
+      const isLanguageError = errorMessage.toLowerCase().includes('not arabic') || 
+                             errorMessage.toLowerCase().includes('language') ||
+                             errorMessage.toLowerCase().includes('detected language');
+      
       toast({
-        title: "خطأ في التصنيف",
-        description: "حدث خطأ أثناء تصنيف الكلمة. يرجى المحاولة مرة أخرى.",
+        title: isLanguageError ? "خطأ في اللغة" : "خطأ في التصنيف",
+        description: isLanguageError 
+          ? "النص المدخل ليس بالعربية. يرجى إدخال نص عربي للتصنيف."
+          : errorMessage,
         variant: "destructive"
       });
     } finally {
