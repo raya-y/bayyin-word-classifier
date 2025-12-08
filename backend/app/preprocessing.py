@@ -18,6 +18,7 @@ DetectorFactory.seed = 0
 def detect_arabic(text: str) -> Tuple[bool, Optional[str]]:
     """
     Detect if the input text is Arabic.
+    Uses character-based detection first (more reliable), then langdetect as secondary check.
     
     Args:
         text: Input text to check
@@ -28,15 +29,36 @@ def detect_arabic(text: str) -> Tuple[bool, Optional[str]]:
     if not text or not text.strip():
         return False, "Input text is empty"
     
+    # First, check if text contains Arabic characters (most reliable method)
+    # Arabic Unicode ranges
+    arabic_pattern = re.compile(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]')
+    has_arabic_chars = arabic_pattern.search(text)
+    
+    # Count Arabic characters vs total characters to determine if it's primarily Arabic
+    arabic_chars = arabic_pattern.findall(text)
+    total_chars = len([c for c in text if c.strip()])  # Non-whitespace characters
+    
+    # If text has Arabic characters and they make up a significant portion, accept it
+    if has_arabic_chars and total_chars > 0:
+        arabic_ratio = len(arabic_chars) / total_chars if total_chars > 0 else 0
+        # Accept if at least 30% of characters are Arabic (handles mixed text)
+        if arabic_ratio >= 0.3:
+            return True, None
+    
+    # Secondary check: use langdetect (but don't rely solely on it due to Arabic/Farsi confusion)
     try:
         detected_lang = langdetect.detect(text)
-        if detected_lang != 'ar':
+        # Accept if langdetect says Arabic OR if we have Arabic characters
+        if detected_lang == 'ar' or has_arabic_chars:
+            return True, None
+        else:
+            # If langdetect says something else but we have Arabic chars, still accept
+            if has_arabic_chars:
+                return True, None
             return False, f"Input text is not Arabic. Detected language: {detected_lang}. Please enter Arabic text for classification."
-        return True, None
     except Exception as e:
-        # Fallback: check if text contains Arabic characters
-        arabic_pattern = re.compile(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]')
-        if arabic_pattern.search(text):
+        # If langdetect fails, fall back to character check
+        if has_arabic_chars:
             return True, None
         return False, "Could not detect Arabic text. Please ensure the input contains Arabic characters."
 
