@@ -5,8 +5,8 @@ import { useToast } from "@/hooks/use-toast";
 
 // Backend API URL
 // For development: http://localhost:8000
-// For production: https://bayyin-backend.onrender.com (update after deploying)
-const API_URL = import.meta.env.VITE_API_URL || 'https://bayyin-backend.onrender.com';
+// For production: Hugging Face Spaces
+const API_URL = import.meta.env.VITE_API_URL || 'https://raya-y-bayyin-backend.hf.space';
 
 const classifyWord = async (word: string) => {
   try {
