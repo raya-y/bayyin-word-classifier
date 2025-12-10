@@ -80,11 +80,12 @@ async def startup_event():
             model_name = model_config["name"]
             file_path = model_config.get("file_path")
             subfolder = model_config.get("subfolder")  # Get subfolder if specified
-            
+            tokenizer_repo = model_config.get("tokenizer_repo")  # Get tokenizer repo if specified
+
             try:
                 logger.info(f"Loading model: {model_name} from {repo_id}" + (f"/{subfolder}" if subfolder else ""))
                 model_id, detected_type, model, tokenizer, vectorizer, config_dict = load_model_from_hf(
-                    repo_id, model_type, file_path, subfolder  # Pass subfolder
+                    repo_id, model_type, file_path, subfolder, tokenizer_repo  # Pass subfolder and tokenizer_repo
                 )
                 
                 # Use custom name if provided, otherwise use model_id

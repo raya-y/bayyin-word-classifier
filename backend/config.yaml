@@ -33,16 +33,19 @@ models:
     subfolder: "Arabertv2_D3Tok"
     type: "transformer"
     name: "AraBERTv2 Transformer"
-  
+    tokenizer_repo: "aubmindlab/bert-base-arabertv2"
+
   - repo_id: "Raya-y/Bayyin_models"
     subfolder: "CAMeLBERT-mix_D3Tok"
     type: "transformer"
     name: "CAMeLBERT-mix Transformer"
-  
+    tokenizer_repo: "CAMeL-Lab/bert-base-arabic-camelbert-mix"
+
   - repo_id: "Raya-y/Bayyin_models"
     subfolder: "CAMeLBERT-msa_D3Tok"
     type: "transformer"
     name: "CAMeLBERT-MSA Classifier"
+    tokenizer_repo: "CAMeL-Lab/bert-base-arabic-camelbert-msa"
   
   # Optional: Placeholder models using existing models temporarily
   - repo_id: "Raya-y/Bayyin_models"

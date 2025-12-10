@@ -199,39 +199,44 @@ def load_classical_model_from_hf(repo_id: str, file_path: Optional[str] = None) 
         logger.error(f"Error loading classical model from {repo_id}: {str(e)}")
         raise
 
-def load_transformer_model_from_hf(repo_id: str, subfolder: Optional[str] = None) -> Tuple[Any, Any, Dict]:
+def load_transformer_model_from_hf(repo_id: str, subfolder: Optional[str] = None, tokenizer_repo: Optional[str] = None) -> Tuple[Any, Any, Dict]:
     """
     Load a transformer model from Hugging Face Hub.
-    
+
     Args:
         repo_id: Hugging Face repository ID
         subfolder: Optional subfolder within the repo (for models in subfolders)
-        
+        tokenizer_repo: Optional separate repository for the tokenizer (for fine-tuned models)
+
     Returns:
         Tuple of (model, tokenizer, config)
     """
     try:
         logger.info(f"Loading transformer model from {repo_id}" + (f"/{subfolder}" if subfolder else ""))
-        
-        # Load tokenizer - use subfolder parameter if provided
-        tokenizer = AutoTokenizer.from_pretrained(
-            repo_id,
-            subfolder=subfolder
-        )
-        
+
+        # Load tokenizer - use tokenizer_repo if provided, otherwise try from model repo
+        if tokenizer_repo:
+            logger.info(f"Loading tokenizer from base model: {tokenizer_repo}")
+            tokenizer = AutoTokenizer.from_pretrained(tokenizer_repo)
+        else:
+            tokenizer = AutoTokenizer.from_pretrained(
+                repo_id,
+                subfolder=subfolder
+            )
+
         # Load model - use subfolder parameter if provided
         model = AutoModelForSequenceClassification.from_pretrained(
             repo_id,
             subfolder=subfolder
         )
         model.eval()  # Set to evaluation mode
-        
+
         # Get model config
         config = model.config.to_dict() if hasattr(model.config, 'to_dict') else {}
-        
+
         logger.info(f"Successfully loaded transformer model from {repo_id}" + (f"/{subfolder}" if subfolder else ""))
         return model, tokenizer, config
-        
+
     except Exception as e:
         logger.error(f"Error loading transformer model from {repo_id}" + (f"/{subfolder}" if subfolder else "") + f": {str(e)}")
         raise
@@ -289,16 +294,17 @@ def detect_model_type(repo_id: str, subfolder: Optional[str] = None) -> str:
         logger.warning(f"Error detecting model type for {repo_id}: {str(e)}, defaulting to transformer")
         return 'transformer'
 
-def load_model_from_hf(repo_id: str, model_type: Optional[str] = None, file_path: Optional[str] = None, subfolder: Optional[str] = None) -> Tuple[str, str, Any, Optional[Any], Optional[Any], Dict]:
+def load_model_from_hf(repo_id: str, model_type: Optional[str] = None, file_path: Optional[str] = None, subfolder: Optional[str] = None, tokenizer_repo: Optional[str] = None) -> Tuple[str, str, Any, Optional[Any], Optional[Any], Dict]:
     """
     Load a model from Hugging Face Hub (supports both classical and transformer models).
-    
+
     Args:
         repo_id: Hugging Face repository ID
         model_type: Optional model type ('classical' or 'transformer'). If None, will attempt detection.
         file_path: Optional specific file path in the repo (for classical models)
         subfolder: Optional subfolder within the repo (for transformer models in subfolders)
-        
+        tokenizer_repo: Optional separate repository for the tokenizer (for fine-tuned transformer models)
+
     Returns:
         Tuple of (model_id, detected_type, model, tokenizer, vectorizer, config)
     """
@@ -306,9 +312,9 @@ def load_model_from_hf(repo_id: str, model_type: Optional[str] = None, file_path
         detected_type = detect_model_type(repo_id, subfolder)
     else:
         detected_type = model_type
-    
+
     if detected_type == 'transformer':
-        model, tokenizer, config = load_transformer_model_from_hf(repo_id, subfolder)
+        model, tokenizer, config = load_transformer_model_from_hf(repo_id, subfolder, tokenizer_repo)
         return repo_id, detected_type, model, tokenizer, None, config
     else:
         model, vectorizer, config = load_classical_model_from_hf(repo_id, file_path)
