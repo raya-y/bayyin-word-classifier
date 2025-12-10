@@ -19,6 +19,151 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+# =============================================================================
+# BiLSTM Model Classes (needed for loading bilstm_arabert_bayyin.joblib)
+# =============================================================================
+import torch.nn as nn
+
+class BiLSTMWithMeta(nn.Module):
+    """
+    BiLSTM with metadata support.
+    Works with any input embedding (static or contextual).
+    """
+    def __init__(self, input_dim, categorical_cardinalities, num_numeric,
+                 lstm_hidden=256, meta_proj_dim=128, num_classes=6, dropout=0.3,
+                 use_bert=False, bert_model_name=None):
+        super().__init__()
+
+        self.use_bert = use_bert
+
+        # Optional BERT encoder (not used for embedding-based models)
+        if use_bert and bert_model_name:
+            from transformers import AutoModel
+            self.bert = AutoModel.from_pretrained(bert_model_name)
+            input_dim = self.bert.config.hidden_size
+        else:
+            self.bert = None
+
+        # BiLSTM layer
+        self.lstm = nn.LSTM(input_size=input_dim, hidden_size=lstm_hidden,
+                           num_layers=1, batch_first=True, bidirectional=True)
+
+        # Metadata embeddings for categorical features
+        self.cat_names = list(categorical_cardinalities.keys())
+        self.cat_embeddings = nn.ModuleDict()
+        total_cat_emb_dim = 0
+        for name, card in categorical_cardinalities.items():
+            emb_dim = min(50, max(4, int(card**0.5)))
+            self.cat_embeddings[name] = nn.Embedding(card, emb_dim)
+            total_cat_emb_dim += emb_dim
+
+        # Metadata projection
+        self.meta_proj = nn.Sequential(
+            nn.Linear(total_cat_emb_dim + num_numeric, meta_proj_dim),
+            nn.ReLU(),
+            nn.Dropout(dropout)
+        )
+
+        # Final classifier
+        self.classifier = nn.Sequential(
+            nn.Linear(lstm_hidden * 2 + meta_proj_dim, 128),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(128, num_classes)
+        )
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, numeric_meta, categorical_meta, attention_mask=None):
+        # Process text through BERT if available
+        if self.use_bert and self.bert is not None:
+            bert_out = self.bert(input_ids=x, attention_mask=attention_mask)
+            x = bert_out.last_hidden_state
+        else:
+            # For static embeddings, add sequence dimension
+            if len(x.shape) == 2:
+                x = x.unsqueeze(1)
+
+        # BiLSTM processing
+        lstm_out, _ = self.lstm(x)
+        pooled = lstm_out.mean(dim=1) if self.use_bert else lstm_out.squeeze(1)
+
+        # Process metadata
+        cat_embs = [self.cat_embeddings[name](categorical_meta[:, i])
+                   for i, name in enumerate(self.cat_names)]
+        cat_concat = torch.cat(cat_embs, dim=1) if cat_embs else \
+                     torch.zeros(numeric_meta.size(0), 0, device=numeric_meta.device)
+
+        meta_concat = torch.cat([numeric_meta, cat_concat], dim=1)
+        meta_vec = self.meta_proj(meta_concat)
+
+        # Combine and classify
+        fused = torch.cat([pooled, meta_vec], dim=1)
+        fused = self.dropout(fused)
+        return self.classifier(fused)
+
+
+class BiLSTMWrapper:
+    """
+    Wrapper class for BiLSTM model that provides sklearn-compatible interface.
+    Works with AraBERT embeddings (768-dim vectors).
+    """
+    def __init__(self, model, cat_cardinalities, num_numeric, num_classes=6, device='cpu'):
+        self.device = device
+        self.num_classes = num_classes
+        self.cat_cardinalities = cat_cardinalities
+        self.num_numeric = num_numeric
+        self.model = model
+        self.default_numeric = np.zeros(num_numeric, dtype=np.float32)
+        self.default_categorical = np.zeros(len(cat_cardinalities), dtype=np.int64)
+
+    def predict(self, X):
+        """Predict class labels (1-6) for AraBERT embeddings."""
+        self.model.eval()
+        self.model.to(self.device)
+
+        with torch.no_grad():
+            if isinstance(X, np.ndarray):
+                X = torch.tensor(X, dtype=torch.float32)
+            if len(X.shape) == 1:
+                X = X.unsqueeze(0)
+
+            batch_size = X.shape[0]
+            numeric = torch.tensor(np.tile(self.default_numeric, (batch_size, 1)), dtype=torch.float32).to(self.device)
+            categorical = torch.tensor(np.tile(self.default_categorical, (batch_size, 1)), dtype=torch.long).to(self.device)
+
+            logits = self.model(X.to(self.device), numeric, categorical)
+            predictions = torch.argmax(logits, dim=1).cpu().numpy()
+            return predictions + 1  # Convert 0-5 to 1-6
+
+    def predict_proba(self, X):
+        """Predict class probabilities for AraBERT embeddings."""
+        self.model.eval()
+        self.model.to(self.device)
+
+        with torch.no_grad():
+            if isinstance(X, np.ndarray):
+                X = torch.tensor(X, dtype=torch.float32)
+            if len(X.shape) == 1:
+                X = X.unsqueeze(0)
+
+            batch_size = X.shape[0]
+            numeric = torch.tensor(np.tile(self.default_numeric, (batch_size, 1)), dtype=torch.float32).to(self.device)
+            categorical = torch.tensor(np.tile(self.default_categorical, (batch_size, 1)), dtype=torch.long).to(self.device)
+
+            logits = self.model(X.to(self.device), numeric, categorical)
+            return torch.softmax(logits, dim=1).cpu().numpy()
+
+
+# Make classes available under __main__ for joblib loading compatibility
+# (the joblib file was saved from a notebook where classes were in __main__)
+import sys
+if '__main__' not in sys.modules:
+    import types
+    sys.modules['__main__'] = types.ModuleType('__main__')
+sys.modules['__main__'].BiLSTMWrapper = BiLSTMWrapper
+sys.modules['__main__'].BiLSTMWithMeta = BiLSTMWithMeta
+
+
 class ModelRegistry:
     """Registry for managing loaded models."""
     
