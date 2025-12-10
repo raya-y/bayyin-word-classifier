@@ -18,15 +18,15 @@ models:
     name: "GNN Classifier"
     file_path: "best_gnn_AraBERTEmbeddings.pt"
   
-  - repo_id: "Raya-y/Bayyin_models"
-    type: "classical"
-    name: "AraBERTv2 Classifier"
-    file_path: "best_model_arabert.joblib"
+  #- repo_id: "Raya-y/Bayyin_models"
+   # type: "classical"
+    #name: "AraBERTv2 Classifier"
+    #file_path: "best_model_arabert.joblib"
   
-  - repo_id: "Raya-y/Bayyin_models"
-    type: "classical"
-    name: "CAMeLBERT-mix Classifier"
-    file_path: "best_model_camelbert.joblib"
+  #- repo_id: "Raya-y/Bayyin_models"
+   # type: "classical"
+    #name: "CAMeLBERT-mix Classifier"
+    #file_path: "best_model_camelbert.joblib"
   
   # Transformer Models (from subdirectories - use subfolder parameter)
   - repo_id: "Raya-y/Bayyin_models"
