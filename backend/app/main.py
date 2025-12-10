@@ -56,7 +56,6 @@ class ClassificationResponse(BaseModel):
     prediction_results: List[PredictionResult]
     ensemble_decision: Optional[str] = None
 
-
 @app.on_event("startup")
 async def startup_event():
     """Load all models from Hugging Face on startup."""
@@ -80,11 +79,12 @@ async def startup_event():
             model_type = model_config["type"]
             model_name = model_config["name"]
             file_path = model_config.get("file_path")
+            subfolder = model_config.get("subfolder")  # Get subfolder if specified
             
             try:
-                logger.info(f"Loading model: {model_name} from {repo_id}")
+                logger.info(f"Loading model: {model_name} from {repo_id}" + (f"/{subfolder}" if subfolder else ""))
                 model_id, detected_type, model, tokenizer, vectorizer, config_dict = load_model_from_hf(
-                    repo_id, model_type, file_path
+                    repo_id, model_type, file_path, subfolder  # Pass subfolder
                 )
                 
                 # Use custom name if provided, otherwise use model_id
@@ -103,7 +103,7 @@ async def startup_event():
                 logger.info(f"Successfully loaded and registered model: {final_model_id}")
                 
             except Exception as e:
-                logger.error(f"Failed to load model {model_name} from {repo_id}: {str(e)}")
+                logger.error(f"Failed to load model {model_name} from {repo_id}" + (f"/{subfolder}" if subfolder else "") + f": {str(e)}")
                 continue
         
         loaded_models = model_registry.list_models()
@@ -112,7 +112,6 @@ async def startup_event():
     except Exception as e:
         logger.error(f"Error during startup: {str(e)}")
         raise
-
 
 @app.get("/")
 async def root():

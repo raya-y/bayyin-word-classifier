@@ -74,9 +74,15 @@ def get_model_repos(config: Dict) -> List[Dict]:
     for model in models:
         if isinstance(model, str):
             # Simple format: just repo ID
-            model_repos.append({"repo_id": model, "type": None, "name": model.split("/")[-1]})
+            model_repos.append({
+                "repo_id": model, 
+                "type": None, 
+                "name": model.split("/")[-1],
+                "file_path": None,
+                "subfolder": None
+            })
         elif isinstance(model, dict):
-            # Extended format: dict with repo_id, type, name
+            # Extended format: dict with repo_id, type, name, file_path, subfolder
             repo_id = model.get("repo_id") or model.get("repo")
             if not repo_id:
                 logger.warning(f"Invalid model config: {model}, skipping")
@@ -85,8 +91,8 @@ def get_model_repos(config: Dict) -> List[Dict]:
                 "repo_id": repo_id,
                 "type": model.get("type"),
                 "name": model.get("name", repo_id.split("/")[-1]),
-                "file_path": model.get("file_path")  # Optional specific file path
+                "file_path": model.get("file_path"),  # Optional specific file path
+                "subfolder": model.get("subfolder")   # Optional subfolder for transformers
             })
     
     return model_repos
-

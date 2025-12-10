@@ -2,64 +2,63 @@
 # Models from https://huggingface.co/Raya-y/Bayyin_models/tree/main
 
 models:
-  # RandomForest model
+  # Classical ML Models (from root of repo)
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "Random Forest"
     file_path: "rf_best_halving_nsamples.pkl"
   
-  # SVM model
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "SVM Classifier"
     file_path: "svm_arabert_model.pkl"
   
-  # GNN model (using .pt file)
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "GNN Classifier"
     file_path: "best_gnn_AraBERTEmbeddings.pt"
   
-  # AraBERT model (joblib)
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "AraBERTv2 Classifier"
     file_path: "best_model_arabert.joblib"
   
-  # CAMeLBERT-mix model (joblib)
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "CAMeLBERT-mix Classifier"
     file_path: "best_model_camelbert.joblib"
   
-  # Transformer models from subdirectories
-  - repo_id: "Raya-y/Bayyin_models/Arabertv2_D3Tok"
+  # Transformer Models (from subdirectories - use subfolder parameter)
+  - repo_id: "Raya-y/Bayyin_models"
+    subfolder: "Arabertv2_D3Tok"
     type: "transformer"
     name: "AraBERTv2 Transformer"
   
-  - repo_id: "Raya-y/Bayyin_models/CAMeLBERT-mix_D3Tok"
+  - repo_id: "Raya-y/Bayyin_models"
+    subfolder: "CAMeLBERT-mix_D3Tok"
     type: "transformer"
     name: "CAMeLBERT-mix Transformer"
   
-  - repo_id: "Raya-y/Bayyin_models/CAMeLBERT-msa_D3Tok"
+  - repo_id: "Raya-y/Bayyin_models"
+    subfolder: "CAMeLBERT-msa_D3Tok"
     type: "transformer"
     name: "CAMeLBERT-MSA Classifier"
   
-  # Placeholder models for missing ones (using existing models temporarily)
+  # Optional: Placeholder models using existing models temporarily
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "XGBoost Classifier"
-    file_path: "rf_best_halving_nsamples.pkl"  # Using RF temporarily
+    file_path: "rf_best_halving_nsamples.pkl"
   
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "BiLSTM Model"
-    file_path: "best_model_arabert.joblib"  # Using AraBERT temporarily
+    file_path: "best_model_arabert.joblib"
   
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "TextCNN Classifier"
-    file_path: "svm_arabert_model.pkl"  # Using SVM temporarily
+    file_path: "svm_arabert_model.pkl"
 
 # API configuration
 api:

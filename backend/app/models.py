@@ -199,49 +199,73 @@ def load_classical_model_from_hf(repo_id: str, file_path: Optional[str] = None) 
         logger.error(f"Error loading classical model from {repo_id}: {str(e)}")
         raise
 
-
-def load_transformer_model_from_hf(repo_id: str) -> Tuple[Any, Any, Dict]:
+def load_transformer_model_from_hf(repo_id: str, subfolder: Optional[str] = None) -> Tuple[Any, Any, Dict]:
     """
     Load a transformer model from Hugging Face Hub.
     
     Args:
         repo_id: Hugging Face repository ID
+        subfolder: Optional subfolder within the repo (for models in subfolders)
         
     Returns:
         Tuple of (model, tokenizer, config)
     """
     try:
-        logger.info(f"Loading transformer model from {repo_id}")
+        logger.info(f"Loading transformer model from {repo_id}" + (f"/{subfolder}" if subfolder else ""))
         
-        # Load tokenizer
-        tokenizer = AutoTokenizer.from_pretrained(repo_id)
+        # Load tokenizer - use subfolder parameter if provided
+        tokenizer = AutoTokenizer.from_pretrained(
+            repo_id,
+            subfolder=subfolder
+        )
         
-        # Load model
-        model = AutoModelForSequenceClassification.from_pretrained(repo_id)
+        # Load model - use subfolder parameter if provided
+        model = AutoModelForSequenceClassification.from_pretrained(
+            repo_id,
+            subfolder=subfolder
+        )
         model.eval()  # Set to evaluation mode
         
         # Get model config
         config = model.config.to_dict() if hasattr(model.config, 'to_dict') else {}
         
-        logger.info(f"Successfully loaded transformer model from {repo_id}")
+        logger.info(f"Successfully loaded transformer model from {repo_id}" + (f"/{subfolder}" if subfolder else ""))
         return model, tokenizer, config
         
     except Exception as e:
-        logger.error(f"Error loading transformer model from {repo_id}: {str(e)}")
+        logger.error(f"Error loading transformer model from {repo_id}" + (f"/{subfolder}" if subfolder else "") + f": {str(e)}")
         raise
 
-
-def detect_model_type(repo_id: str) -> str:
+def detect_model_type(repo_id: str, subfolder: Optional[str] = None) -> str:
     """
     Attempt to detect model type by checking repository contents.
     
     Args:
         repo_id: Hugging Face repository ID
+        subfolder: Optional subfolder within the repo
         
     Returns:
         'transformer' or 'classical'
     """
     try:
+        # For transformer models, try to download from subfolder first
+        if subfolder:
+            try:
+                cache_dir = snapshot_download(repo_id=repo_id, subfolder=subfolder)
+                cache_path = Path(cache_dir)
+                
+                # Check for transformer model files in subfolder
+                has_config = (cache_path / "config.json").exists()
+                has_pytorch_model = (cache_path / "pytorch_model.bin").exists()
+                has_safetensors = (cache_path / "model.safetensors").exists() or bool(list(cache_path.glob("*.safetensors")))
+                
+                if has_config and (has_pytorch_model or has_safetensors):
+                    return 'transformer'
+            except Exception as e:
+                logger.warning(f"Could not detect type for {repo_id}/{subfolder}: {str(e)}")
+                return 'transformer'  # Default to transformer for subfolder models
+        
+        # Fall back to checking main repo
         cache_dir = snapshot_download(repo_id=repo_id)
         cache_path = Path(cache_dir)
         
@@ -265,8 +289,7 @@ def detect_model_type(repo_id: str) -> str:
         logger.warning(f"Error detecting model type for {repo_id}: {str(e)}, defaulting to transformer")
         return 'transformer'
 
-
-def load_model_from_hf(repo_id: str, model_type: Optional[str] = None, file_path: Optional[str] = None) -> Tuple[str, str, Any, Optional[Any], Optional[Any], Dict]:
+def load_model_from_hf(repo_id: str, model_type: Optional[str] = None, file_path: Optional[str] = None, subfolder: Optional[str] = None) -> Tuple[str, str, Any, Optional[Any], Optional[Any], Dict]:
     """
     Load a model from Hugging Face Hub (supports both classical and transformer models).
     
@@ -274,22 +297,22 @@ def load_model_from_hf(repo_id: str, model_type: Optional[str] = None, file_path
         repo_id: Hugging Face repository ID
         model_type: Optional model type ('classical' or 'transformer'). If None, will attempt detection.
         file_path: Optional specific file path in the repo (for classical models)
+        subfolder: Optional subfolder within the repo (for transformer models in subfolders)
         
     Returns:
         Tuple of (model_id, detected_type, model, tokenizer, vectorizer, config)
     """
     if model_type is None:
-        detected_type = detect_model_type(repo_id)
+        detected_type = detect_model_type(repo_id, subfolder)
     else:
         detected_type = model_type
     
     if detected_type == 'transformer':
-        model, tokenizer, config = load_transformer_model_from_hf(repo_id)
+        model, tokenizer, config = load_transformer_model_from_hf(repo_id, subfolder)
         return repo_id, detected_type, model, tokenizer, None, config
     else:
         model, vectorizer, config = load_classical_model_from_hf(repo_id, file_path)
         return repo_id, detected_type, model, None, vectorizer, config
-
 
 def predict_with_classical_model(model: Any, vectorizer: Optional[Any], 
                                  preprocessed_input: Union[str, torch.Tensor]) -> Tuple[int, float]:
