@@ -56,7 +56,7 @@ models:
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "BiLSTM Model"
-    file_path: "best_model_arabert.joblib"
+    file_path: "bilstm_arabert_bayyin.joblib"
   
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
