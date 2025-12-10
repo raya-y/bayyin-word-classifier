@@ -3,10 +3,10 @@ import { ClassificationInput } from "@/components/ClassificationInput";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { useToast } from "@/hooks/use-toast";
 
-// Backend API URL - update this to match your backend server
+// Backend API URL
 // For development: http://localhost:8000
-// For production: update to your deployed backend URL
-const API_URL = 'http://localhost:8000';
+// For production: https://bayyin-backend.onrender.com (update after deploying)
+const API_URL = import.meta.env.VITE_API_URL || 'https://bayyin-backend.onrender.com';
 
 const classifyWord = async (word: string) => {
   try {
