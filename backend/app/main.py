@@ -12,11 +12,13 @@ from pathlib import Path
 
 from app.preprocessing import detect_arabic, preprocess_text
 from app.models import (
-    model_registry, 
-    load_model_from_hf, 
+    model_registry,
+    load_model_from_hf,
     predict_with_classical_model,
     predict_with_transformer_model,
-    format_prediction
+    format_prediction,
+    BiLSTMWrapper,
+    BiLSTMWithMeta
 )
 from app.config import load_config, get_model_repos
 from app.embeddings import load_arabert_model
