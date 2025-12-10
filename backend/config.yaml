@@ -6,12 +6,12 @@ models:
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "Random Forest"
-    file_path: "rf_best_halving_nsamples.pkl"
+    file_path: "rf_arabert_bayyin.joblib"
   
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "SVM Classifier"
-    file_path: "svm_arabert_model.pkl"
+    file_path: "svm_arabert_bayyin.joblib"
   
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
@@ -51,7 +51,7 @@ models:
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "XGBoost Classifier"
-    file_path: "rf_best_halving_nsamples.pkl"
+    file_path: "rf_arabert_bayyin.joblib"
   
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
