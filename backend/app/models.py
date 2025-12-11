@@ -271,6 +271,102 @@ sys.modules['__main__'].GNNReadabilityGAT = GNNReadabilityGAT
 sys.modules['__main__'].GNNWrapper = GNNWrapper
 
 
+# =============================================================================
+# TextCNN Model Classes (needed for loading textcnn_arabert_bayyin.joblib)
+# =============================================================================
+
+class CNNReadability1D(nn.Module):
+    """TextCNN model architecture for 1D convolutions over features."""
+    def __init__(self, input_dim, num_classes=6, dropout=0.3):
+        super(CNNReadability1D, self).__init__()
+        self.conv1 = nn.Conv1d(in_channels=1, out_channels=128, kernel_size=3, padding=1)
+        self.bn1 = nn.BatchNorm1d(128)
+        self.conv2 = nn.Conv1d(in_channels=128, out_channels=256, kernel_size=3, padding=1)
+        self.bn2 = nn.BatchNorm1d(256)
+        self.conv3 = nn.Conv1d(in_channels=256, out_channels=256, kernel_size=3, padding=1)
+        self.global_pool = nn.AdaptiveMaxPool1d(1)
+        self.fc1 = nn.Linear(256, 128)
+        self.fc2 = nn.Linear(128, num_classes)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x):
+        import torch.nn.functional as F
+        x = x.unsqueeze(1)
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = F.elu(x)
+        x = self.dropout(x)
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = F.elu(x)
+        x = self.dropout(x)
+        x = self.conv3(x)
+        x = F.elu(x)
+        x = self.global_pool(x)
+        x = x.squeeze(-1)
+        x = self.fc1(x)
+        x = F.relu(x)
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
+
+
+class TextCNNWrapper:
+    """Wrapper with sklearn-compatible predict/predict_proba interface for TextCNN."""
+
+    def __init__(self, model, input_dim=772, device='cpu'):
+        self.device = device
+        self.input_dim = input_dim
+        self.num_classes = 6
+        self.model = model
+        self.model.to(device)
+        self.model.eval()
+
+    def _pad_input(self, X):
+        """Pad 768-dim input to 772-dim by adding 4 zeros for stats features"""
+        if X.shape[1] == 768:
+            padding = torch.zeros(X.shape[0], 4, dtype=X.dtype, device=X.device)
+            X = torch.cat([X, padding], dim=1)
+        return X
+
+    def predict(self, X):
+        """Predict class labels (1-6) for AraBERT embeddings."""
+        self.model.eval()
+
+        with torch.no_grad():
+            if isinstance(X, np.ndarray):
+                X = torch.tensor(X, dtype=torch.float32)
+            if len(X.shape) == 1:
+                X = X.unsqueeze(0)
+
+            X = self._pad_input(X)
+            X = X.to(self.device)
+
+            logits = self.model(X)
+            predictions = torch.argmax(logits, dim=1).cpu().numpy()
+            return predictions + 1  # Convert 0-5 to 1-6
+
+    def predict_proba(self, X):
+        """Predict class probabilities for AraBERT embeddings."""
+        self.model.eval()
+
+        with torch.no_grad():
+            if isinstance(X, np.ndarray):
+                X = torch.tensor(X, dtype=torch.float32)
+            if len(X.shape) == 1:
+                X = X.unsqueeze(0)
+
+            X = self._pad_input(X)
+            X = X.to(self.device)
+
+            logits = self.model(X)
+            return torch.softmax(logits, dim=1).cpu().numpy()
+
+
+sys.modules['__main__'].CNNReadability1D = CNNReadability1D
+sys.modules['__main__'].TextCNNWrapper = TextCNNWrapper
+
+
 class ModelRegistry:
     """Registry for managing loaded models."""
     

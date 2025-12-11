@@ -20,7 +20,9 @@ from app.models import (
     BiLSTMWrapper,
     BiLSTMWithMeta,
     GNNReadabilityGAT,
-    GNNWrapper
+    GNNWrapper,
+    CNNReadability1D,
+    TextCNNWrapper
 )
 from app.config import load_config, get_model_repos
 from app.embeddings import load_arabert_model
