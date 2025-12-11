@@ -58,23 +58,23 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    /* Educational Level Colors - Green Gradient */
-    --level-1: 167 45% 20%;  /* Dark green - #1B4D3E */
+    /* Educational Level Colors - Blue Gradient */
+    --level-1: 220 70% 25%;  /* Deep navy */
     --level-1-foreground: 0 0% 98%;
 
-    --level-2: 160 50% 25%;  /* #206040 */
+    --level-2: 215 65% 35%;  /* Dark blue */
     --level-2-foreground: 0 0% 98%;
 
-    --level-3: 158 55% 32%;  /* #258060 */
+    --level-3: 210 60% 45%;  /* Medium blue */
     --level-3-foreground: 0 0% 98%;
 
-    --level-4: 160 57% 39%;  /* #2B9A80 */
+    --level-4: 205 65% 50%;  /* Sky blue */
     --level-4-foreground: 0 0% 98%;
 
-    --level-5: 163 56% 45%;  /* #32B3A0 */
+    --level-5: 200 70% 55%;  /* Light blue */
     --level-5-foreground: 0 0% 98%;
 
-    --level-6: 165 58% 51%;  /* #38CCB8 */
+    --level-6: 195 75% 60%;  /* Bright cyan-blue */
     --level-6-foreground: 0 0% 98%;
 
     /* Gradient definitions */
