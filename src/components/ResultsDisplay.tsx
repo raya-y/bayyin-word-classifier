@@ -42,9 +42,7 @@ export const ResultsDisplay = ({
               <h3 className="text-2xl font-bold text-foreground">
                 نتيجة التصويت   
               </h3>
-              <p className="text-muted-foreground mb-6">
-                التصنيف الأكثر اتفاقًا بين جميع النماذج
-              </p>
+              <p className="text-muted-foreground mb-6">التصنيف الأكثر اتفاقًا بين أفضل خمسة نماذج</p>
               <div className="flex justify-center">
                 <LevelBadge level={hardVote} className="text-lg px-6 py-3" />
               </div>
