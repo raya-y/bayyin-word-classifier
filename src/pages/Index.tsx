@@ -111,24 +111,24 @@ const Index = () => {
 
         {/* Info Section */}
         {!results && !isLoading && <div className="max-w-4xl mx-auto mt-16 p-8 bg-card border border-border rounded-lg" dir="rtl">
-            <h3 className="text-2xl font-bold text-foreground mb-4 text-center">
+            <h3 className="text-2xl font-bold text-foreground mb-4 text-center font-serif">
               حول نظام التصنيف
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-muted-foreground">
               <div>
-                <h4 className="font-semibold text-foreground mb-2">المستويات التعليمية:</h4>
+                <h4 className="font-semibold text-foreground mb-2 font-serif">المستويات التعليمية:</h4>
                 <ul className="space-y-2 text-sm">
-                  <li>• المستوى 1: الصف 1-2</li>
-                  <li>• المستوى 2: الصف 3-4</li>
-                  <li>• المستوى 3: الصف 5-6</li>
-                  <li>• المستوى 4: الصف 7-9</li>
-                  <li>• المستوى 5: الصف 10-12</li>
-                  <li>• المستوى 6: الجامعة</li>
+                  <li className="font-serif">• المستوى 1: الصف 1-2</li>
+                  <li className="font-serif">• المستوى 2: الصف 3-4</li>
+                  <li className="font-serif">• المستوى 3: الصف 5-6</li>
+                  <li className="font-serif">• المستوى 4: الصف 7-9</li>
+                  <li className="font-serif">• المستوى 5: الصف 10-12</li>
+                  <li className="font-serif">• المستوى 6: الجامعة</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-foreground mb-2">كيف يعمل النظام:</h4>
-                <p className="text-sm">
+                <h4 className="font-semibold text-foreground mb-2 font-serif">كيف يعمل النظام:</h4>
+                <p className="text-sm font-serif">
                   يستخدم نظامنا 9 نماذج مختلفة من تعلم الآلة والتعلم العميق ونماذج المحولات لتحليل وتصنيف النصوص بناءً على تعقيدها والمستوى التعليمي المناسب. تمثل النتيجة النهائية التصنيف الأكثر اتفاقًا بين جميع النماذج.
                 </p>
               </div>
@@ -139,7 +139,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border mt-20 py-8 bg-card/30" dir="rtl">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>© 2025 بَيِّنْ - نظام تصنيف الكلمات بالتعلم الآلي</p>
+          <p className="font-serif">© 2025 بَيِّنْ - نظام تصنيف الكلمات بالتعلم الآلي</p>
         </div>
       </footer>
     </div>;
