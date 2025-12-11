@@ -19,7 +19,7 @@ export const ResultsDisplay = ({
 }: ResultsDisplayProps) => {
   return <div className="w-full max-w-6xl mx-auto animate-in fade-in duration-500">
       <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-2">
+        <h2 className="text-3xl font-bold text-foreground mb-2 font-serif">
           نتائج التصنيف         
         </h2>
       </div>
