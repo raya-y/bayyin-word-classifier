@@ -11,6 +11,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,7 +35,7 @@ All colors MUST be HSL.
     --popover-foreground: 222 47% 11%;
 
     /* Primary: Dark green */
-    --primary: 200 98% 39%;
+    --primary: 201 90% 27.451%;
     --primary-foreground: 204 100% 97%;
 
     /* Secondary: Medium green accent */
