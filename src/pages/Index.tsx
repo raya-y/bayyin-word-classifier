@@ -92,7 +92,7 @@ const Index = () => {
         {/* Hero Section */}
         <div className="text-center mb-16 space-y-4" dir="rtl">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight font-serif">منصة ذكية لتحليل الجمل العربية وتقدير مستواها التعليمي</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-serif">بين هو نظام ذكي يصنف الجمل العربية بدقة بحسب المستوى التعليمي باستخدام تقنيات حديثة في تعلم الآلة والتعلم العميق ونماذج المحولات.</p>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-serif">بَيِّنْ هو نظام ذكي يصنف الجمل العربية بدقة بحسب المستوى التعليمي باستخدام تقنيات حديثة في تعلم الآلة والتعلم العميق ونماذج المحولات.</p>
         </div>
 
         {/* Input Section */}
