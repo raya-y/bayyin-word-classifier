@@ -217,21 +217,30 @@ async def classify_text(request: ClassificationRequest):
             detail="All model predictions failed. Please check server logs."
         )
     
-    # Calculate ensemble decision (hard voting - most common prediction)
+    # Calculate ensemble decision (hard voting - only Transformers and BiLSTM)
+    # These models have the highest accuracy and QWK scores
+    ensemble_models = {
+        "AraBERTv2 Transformer",
+        "CAMeLBERT-mix Transformer",
+        "CAMeLBERT-MSA Classifier",
+        "BiLSTM Model"
+    }
+
     if prediction_results:
-        # Extract grade numbers from predictions
+        # Extract grade numbers only from ensemble models
         grade_numbers = []
         for result in prediction_results:
-            grade_str = result["prediction"]
-            # Extract number from "Grade X"
-            try:
-                grade_num = int(grade_str.split()[-1])
-                grade_numbers.append(grade_num)
-            except:
-                pass
-        
+            if result["model"] in ensemble_models:
+                grade_str = result["prediction"]
+                # Extract number from "Grade X"
+                try:
+                    grade_num = int(grade_str.split()[-1])
+                    grade_numbers.append(grade_num)
+                except:
+                    pass
+
         if grade_numbers:
-            # Most common grade
+            # Most common grade among ensemble models
             from collections import Counter
             most_common = Counter(grade_numbers).most_common(1)[0][0]
             ensemble_decision = f"Grade {most_common}"
