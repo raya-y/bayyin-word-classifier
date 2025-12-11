@@ -47,11 +47,11 @@ models:
     name: "CAMeLBERT-MSA Classifier"
     tokenizer_repo: "CAMeL-Lab/bert-base-arabic-camelbert-msa"
   
-  # Optional: Placeholder models using existing models temporarily
+  # XGBoost model trained on AraBERT embeddings
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "XGBoost Classifier"
-    file_path: "rf_arabert_bayyin.joblib"
+    file_path: "xgboost_arabert_bayyin.joblib"
   
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
