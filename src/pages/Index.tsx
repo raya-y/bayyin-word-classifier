@@ -7,34 +7,33 @@ import { useToast } from "@/hooks/use-toast";
 // For development: http://localhost:8000
 // For production: Hugging Face Spaces
 const API_URL = import.meta.env.VITE_API_URL || 'https://raya-y-bayyin-backend.hf.space';
-
 const classifyWord = async (word: string) => {
   try {
     const response = await fetch(`${API_URL}/classify`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ text: word }),
+      body: JSON.stringify({
+        text: word
+      })
     });
-    
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ detail: 'Classification failed' }));
+      const errorData = await response.json().catch(() => ({
+        detail: 'Classification failed'
+      }));
       throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
     }
-    
     const data = await response.json();
-    
+
     // Transform backend response to frontend format
     return {
       predictions: data.prediction_results.map((result: any) => ({
         modelName: result.model,
         level: parseInt(result.prediction.split(' ')[1]) as 1 | 2 | 3 | 4 | 5 | 6,
-        confidence: result.confidence,
+        confidence: result.confidence
       })),
-      hardVote: data.ensemble_decision 
-        ? parseInt(data.ensemble_decision.split(' ')[1]) as 1 | 2 | 3 | 4 | 5 | 6
-        : 1,
+      hardVote: data.ensemble_decision ? parseInt(data.ensemble_decision.split(' ')[1]) as 1 | 2 | 3 | 4 | 5 | 6 : 1
     };
   } catch (error) {
     // Re-throw to be handled by the component
@@ -58,22 +57,17 @@ const Index = () => {
     } catch (error: any) {
       // Extract error message
       let errorMessage = error?.message || "حدث خطأ أثناء تصنيف الكلمة. يرجى المحاولة مرة أخرى.";
-      
+
       // Check if it's a network error (backend not running)
       if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
         errorMessage = "لا يمكن الاتصال بالخادم. يرجى التأكد من تشغيل الخادم على المنفذ 8000.";
       }
-      
+
       // Check if it's a language detection error (non-Arabic text)
-      const isLanguageError = errorMessage.toLowerCase().includes('not arabic') || 
-                             errorMessage.toLowerCase().includes('language') ||
-                             errorMessage.toLowerCase().includes('detected language');
-      
+      const isLanguageError = errorMessage.toLowerCase().includes('not arabic') || errorMessage.toLowerCase().includes('language') || errorMessage.toLowerCase().includes('detected language');
       toast({
         title: isLanguageError ? "خطأ في اللغة" : "خطأ في التصنيف",
-        description: isLanguageError 
-          ? "النص المدخل ليس بالعربية. يرجى إدخال نص عربي للتصنيف."
-          : errorMessage,
+        description: isLanguageError ? "النص المدخل ليس بالعربية. يرجى إدخال نص عربي للتصنيف." : errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -97,14 +91,8 @@ const Index = () => {
       <main className="container mx-auto px-4 py-12">
         {/* Hero Section */}
         <div className="text-center mb-16 space-y-4" dir="rtl">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
-            تصنيف النصوص العربية حسب
-المستوى التعليمي
-            
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            استخدام 9 نماذج متقدمة من تعلم الآلة والتعلم العميق ونماذج المحولات لتحديد المستوى التعليمي المناسب لأي جملة
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">بين منصة ذكية لتحليل الجمل العربية وتقدير مستواها التعليمي بدقة عالية</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">بين هو نظام ذكي يصنف الجمل العربية بدقة بحسب المستوى التعليمي باستخدام تقنيات حديثة في تعلم الآلة والتعلم العميق ونماذج المحولات.</p>
         </div>
 
         {/* Input Section */}
@@ -130,7 +118,7 @@ const Index = () => {
               <div>
                 <h4 className="font-semibold text-foreground mb-2">المستويات التعليمية:</h4>
                 <ul className="space-y-2 text-sm">
-                  <li>• المستوى 1: مرحلة ما قبل المدرسة والصف 1-2</li>
+                  <li>• المستوى 1: الصف 1-2</li>
                   <li>• المستوى 2: الصف 3-4</li>
                   <li>• المستوى 3: الصف 5-6</li>
                   <li>• المستوى 4: الصف 7-9</li>
