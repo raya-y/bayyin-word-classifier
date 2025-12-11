@@ -91,7 +91,7 @@ const Index = () => {
       <main className="container mx-auto px-4 py-12">
         {/* Hero Section */}
         <div className="text-center mb-16 space-y-4" dir="rtl">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">بين منصة ذكية لتحليل الجمل العربية وتقدير مستواها التعليمي بدقة عالية</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">منصة ذكية لتحليل الجمل العربية وتقدير مستواها التعليمي</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">بين هو نظام ذكي يصنف الجمل العربية بدقة بحسب المستوى التعليمي باستخدام تقنيات حديثة في تعلم الآلة والتعلم العميق ونماذج المحولات.</p>
         </div>
 
