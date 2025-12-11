@@ -154,6 +154,111 @@ class BiLSTMWrapper:
             return torch.softmax(logits, dim=1).cpu().numpy()
 
 
+# =============================================================================
+# GNN Model Classes (needed for loading gnn_arabert_bayyin.joblib)
+# =============================================================================
+
+class GNNReadabilityGAT(nn.Module):
+    """GNN model architecture using Graph Attention Networks."""
+    def __init__(self, input_dim, hidden_dim=256, num_classes=6, dropout=0.3):
+        super(GNNReadabilityGAT, self).__init__()
+        try:
+            from torch_geometric.nn import GATConv
+            self.conv1 = GATConv(input_dim, hidden_dim, heads=4, dropout=dropout)
+            self.conv2 = GATConv(hidden_dim*4, hidden_dim, heads=4, dropout=dropout)
+            self.conv3 = GATConv(hidden_dim*4, hidden_dim, heads=1, dropout=dropout)
+        except ImportError:
+            # Fallback if torch_geometric not available
+            self.conv1 = None
+            self.conv2 = None
+            self.conv3 = None
+        self.fc1 = nn.Linear(hidden_dim, 128)
+        self.fc2 = nn.Linear(128, num_classes)
+        self.dropout = nn.Dropout(dropout)
+        self.bn1 = nn.BatchNorm1d(hidden_dim*4)
+        self.bn2 = nn.BatchNorm1d(hidden_dim*4)
+
+    def forward(self, x, edge_index):
+        import torch.nn.functional as F
+        x = self.conv1(x, edge_index)
+        x = self.bn1(x)
+        x = F.elu(x)
+        x = self.dropout(x)
+        x = self.conv2(x, edge_index)
+        x = self.bn2(x)
+        x = F.elu(x)
+        x = self.dropout(x)
+        x = self.conv3(x, edge_index)
+        x = F.elu(x)
+        x = self.fc1(x)
+        x = F.relu(x)
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
+
+
+class GNNWrapper:
+    """Wrapper with sklearn-compatible predict/predict_proba interface for GNN."""
+
+    def __init__(self, model, input_dim=768, device='cpu'):
+        self.device = device
+        self.input_dim = input_dim
+        self.num_classes = 6
+        self.model = model
+        self.model.to(device)
+        self.model.eval()
+
+    def _create_edge_index(self, n_samples):
+        """Create self-loop edges for inference"""
+        edge_index = torch.tensor([
+            list(range(n_samples)) + list(range(n_samples)),
+            list(range(n_samples)) + list(range(n_samples))
+        ], dtype=torch.long)
+        return edge_index
+
+    def predict(self, X):
+        """Predict class labels (1-6) for AraBERT embeddings."""
+        self.model.eval()
+
+        with torch.no_grad():
+            if isinstance(X, np.ndarray):
+                X = torch.tensor(X, dtype=torch.float32)
+            if len(X.shape) == 1:
+                X = X.unsqueeze(0)
+
+            # Only use first 768 dims if more provided
+            if X.shape[1] > 768:
+                X = X[:, :768]
+
+            n_samples = X.shape[0]
+            edge_index = self._create_edge_index(n_samples).to(self.device)
+            X = X.to(self.device)
+
+            logits = self.model(X, edge_index)
+            predictions = torch.argmax(logits, dim=1).cpu().numpy()
+            return predictions + 1  # Convert 0-5 to 1-6
+
+    def predict_proba(self, X):
+        """Predict class probabilities for AraBERT embeddings."""
+        self.model.eval()
+
+        with torch.no_grad():
+            if isinstance(X, np.ndarray):
+                X = torch.tensor(X, dtype=torch.float32)
+            if len(X.shape) == 1:
+                X = X.unsqueeze(0)
+
+            if X.shape[1] > 768:
+                X = X[:, :768]
+
+            n_samples = X.shape[0]
+            edge_index = self._create_edge_index(n_samples).to(self.device)
+            X = X.to(self.device)
+
+            logits = self.model(X, edge_index)
+            return torch.softmax(logits, dim=1).cpu().numpy()
+
+
 # Make classes available under __main__ for joblib loading compatibility
 # (the joblib file was saved from a notebook where classes were in __main__)
 import sys
@@ -162,6 +267,8 @@ if '__main__' not in sys.modules:
     sys.modules['__main__'] = types.ModuleType('__main__')
 sys.modules['__main__'].BiLSTMWrapper = BiLSTMWrapper
 sys.modules['__main__'].BiLSTMWithMeta = BiLSTMWithMeta
+sys.modules['__main__'].GNNReadabilityGAT = GNNReadabilityGAT
+sys.modules['__main__'].GNNWrapper = GNNWrapper
 
 
 class ModelRegistry:

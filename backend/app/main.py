@@ -18,7 +18,9 @@ from app.models import (
     predict_with_transformer_model,
     format_prediction,
     BiLSTMWrapper,
-    BiLSTMWithMeta
+    BiLSTMWithMeta,
+    GNNReadabilityGAT,
+    GNNWrapper
 )
 from app.config import load_config, get_model_repos
 from app.embeddings import load_arabert_model

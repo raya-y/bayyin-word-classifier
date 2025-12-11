@@ -16,7 +16,7 @@ models:
   - repo_id: "Raya-y/Bayyin_models"
     type: "classical"
     name: "GNN Classifier"
-    file_path: "gnn_arabert_model.pkl"
+    file_path: "gnn_arabert_bayyin.joblib"
   
   #- repo_id: "Raya-y/Bayyin_models"
    # type: "classical"
