@@ -58,10 +58,11 @@ models:
     name: "BiLSTM Model"
     file_path: "bilstm_arabert_bayyin.joblib"
   
-  - repo_id: "Raya-y/Bayyin_models"
-    type: "classical"
-    name: "TextCNN Classifier"
-    file_path: "svm_arabert_model.pkl"
+  # TextCNN - disabled until proper model is trained
+  #- repo_id: "Raya-y/Bayyin_models"
+  #  type: "classical"
+  #  name: "TextCNN Classifier"
+  #  file_path: "textcnn_arabert_bayyin.joblib"
 
 # API configuration
 api:
